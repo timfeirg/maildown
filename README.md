@@ -16,5 +16,8 @@ man.send_mail(to='timfeirg@qq.com')
 
 # install
 
-clone and `sudo pip2 install -e maildown`
+* clone and `sudo pip2 install ./maildown`.
+* requires [pandoc](http://johnmacfarlane.net/pandoc/installing.html)
+
+
 tested using python 2.7.6, doesn't support python3.
