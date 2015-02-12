@@ -72,5 +72,4 @@ class MailMan(object):
         session.starttls()
         session.ehlo()
         session.login(self.user, self.pw)
-        res = session.sendmail(self.user, to, msg.as_string())
-        print(res)
+        session.sendmail(self.user, to, msg.as_string())
