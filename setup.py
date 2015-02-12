@@ -1,8 +1,8 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 setup(
     name='maildown',
     version='0.0.1',
-    packages=find_packages(),
+    packages=['maildown'],
 
     # Project uses reStructuredText, so ensure that the docutils get
     # installed or upgraded on the target machine

@@ -16,6 +16,7 @@ class MailMan(object):
         settings -- dict or str containing filepath
         """
         self.user = settings['user']
+        self.nickname = settings['nickname']
         self.pw = settings['password']
         self.server = settings['server']
 
@@ -24,7 +25,7 @@ class MailMan(object):
         """
         send mail to one or more recipients, all should be ascii or unicode
         * nickname -- name displayed at mail, e.g. 'batman <bruce@gmail.com>',
-        default to your email address
+        default to settings['nickname'] your email address
         * to -- recipients email address, str or list of str
         * title -- email title, default to 'Untitled'
         * content -- default empty str
