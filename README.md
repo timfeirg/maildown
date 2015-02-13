@@ -14,6 +14,10 @@ man = MailMan(s)
 man.send_mail(to='timfeirg@qq.com')
 ```
 
+# features
+
+are very little, supports markdown, attachments, everything may not work as expected.
+
 # install
 
 * clone and `sudo pip2 install ./maildown`.

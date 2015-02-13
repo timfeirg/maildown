@@ -6,12 +6,15 @@ import pypandoc
 import smtplib
 from pynliner import Pynliner
 from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
 from email.MIMEText import MIMEText
+from email.Utils import COMMASPACE, formatdate
+from email import Encoders
 
 
 class MailMan(object):
 
-    def __init__(self, settings=None):
+    def __init__(self, settings={}):
         """
         settings -- dict or str containing filepath
         """
@@ -21,7 +24,7 @@ class MailMan(object):
         self.server = settings['server']
 
     def send_mail(self, nickname='', to=[], title='Untitled', content='',
-                  mode='markdown', css=None, debug=False):
+                  mode='markdown', css=None, debug=False, attach=[]):
         """
         send mail to one or more recipients, all should be ascii or unicode
         * nickname -- name displayed at mail, e.g. 'batman <bruce@gmail.com>',
@@ -34,15 +37,17 @@ class MailMan(object):
         if the file exists, otherwise the program thinks it's a css string
         * debug -- if True, print the corresponding html and exit, you can std
         output to file and inspect it with chrome
+        * attach -- str or list of str, file to send as attachments
         """
         if not isinstance(to, list):
             to = [to]
 
-        tos = ','.join(to)
+        tos = COMMASPACE.join(to)
 
         msg = MIMEMultipart()
         msg['From'] = nickname or self.user
         msg['To'] = tos
+        msg['Date'] = formatdate(localtime=True)
         msg['Subject'] = title
 
         if mode == 'markdown':
@@ -66,11 +71,32 @@ class MailMan(object):
             print(message)
             return
 
+        if not isinstance(attach, list):
+            attach = [attach]
+
+        for filename in attach:
+            part = MIMEBase('application', 'octet-stream')
+            with open(filename, 'rb') as f:
+                part.set_payload(f.read())
+
+            Encoders.encode_base64(part)
+            part.add_header(
+                'Content-Disposition',
+                'attachment; filename="{0}"'.format(os.path.basename(filename)))
+            msg.attach(part)
+
         msg.attach(MIMEText(message, mime_mode))
 
         session = smtplib.SMTP(host=self.server)
+
         session.ehlo()
         session.starttls()
         session.ehlo()
+
         session.login(self.user, self.pw)
         session.sendmail(self.user, to, msg.as_string())
+        session.close()
+
+
+if __name__ == '__main__':
+    pass
